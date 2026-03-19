@@ -29,7 +29,7 @@ Only launch agents that are relevant — skip agents whose scope has no bearing 
 
 ## Step 3. Draft the plan
 
-Using the spec requirements and exploration results, write a plan file to `.claude/plans/<feature-slug>.md` with this structure:
+Using the spec requirements and exploration results, write a plan file to `.claude/_plans/plan<feature-slug>.md` with this structure:
 
 ```markdown
 # Plan: <Feature Title>
@@ -77,7 +77,7 @@ How to test the implementation end-to-end:
 
 After saving the plan file, respond with:
 
-Plan file: ./_plans/<feature-slug>.md
+Plan file: _plans/<feature-slug>.md
 Steps: <count>
 Parallel opportunities: <brief summary>
 
