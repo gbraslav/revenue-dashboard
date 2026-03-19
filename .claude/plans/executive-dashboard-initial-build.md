@@ -20,8 +20,8 @@ Build a dark-themed executive dashboard with sidebar navigation, activity feed, 
 - **What**: Init shadcn/ui, install Recharts, configure for dark theme
 - **Files**: `components.json`, `lib/utils.ts`, `app/globals.css` (modify)
 - **Reuse**: Existing `app/globals.css` Tailwind setup
-- **Parallelisable**: No (all other steps depend on this)
-- **Commands**:
+- **Parallelisable**: No (all other steps depend on this)`
+- **Commands**:`
   ```bash
   npx shadcn@latest init
   npm install recharts

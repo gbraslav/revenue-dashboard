@@ -11,7 +11,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm start` — Start production server
 - `npm run lint` — Run ESLint
 
-No test runner is configured yet. Tests go in `./test`.
+- `npx vitest run` — Run unit tests (in `./test`)
+- `npx playwright test` — Run Playwright e2e tests (in `./e2e`)
+- `npx playwright test --ui` — Open Playwright UI mode
 
 ## Architecture
 
