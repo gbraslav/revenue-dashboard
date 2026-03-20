@@ -8,21 +8,11 @@ export function ExportPdfButton() {
 
   async function handleExport() {
     setLoading(true);
-    try {
-      const response = await fetch("/api/export-pdf");
-      if (!response.ok) throw new Error("PDF generation failed");
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "executive-dashboard-report.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    window.location.href = "/api/export-pdf";
+    // Keep loading state visible long enough for the download to initiate,
+    // then reset so the button is usable again.
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    setLoading(false);
   }
 
   return (
