@@ -54,7 +54,7 @@ export function RecentActivities() {
     <Card className="border-0">
       <CardHeader className="flex-row items-center justify-between">
         <CardTitle className="text-lg font-semibold">Recent Activities</CardTitle>
-        <a href="#" className="text-sm text-primary hover:underline">
+        <a href="/activities" className="text-sm text-primary hover:underline">
           View All Tasks
         </a>
       </CardHeader>
