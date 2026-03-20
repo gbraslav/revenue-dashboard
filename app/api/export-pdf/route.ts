@@ -12,6 +12,7 @@ async function getLaunchOptions() {
     };
   }
   const chromium = (await import("@sparticuz/chromium")).default;
+  chromium.setGraphicsMode = false;
   return {
     executablePath: await chromium.executablePath(),
     args: chromium.args,
@@ -54,8 +55,9 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     console.error("PDF generation failed:", error);
-    return Response.json({ error: "Failed to generate PDF" }, { status: 500 });
+    return Response.json({ error: "Failed to generate PDF", detail: message }, { status: 500 });
   } finally {
     if (browser) {
       await browser.close();
