@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.env*
+_plans
+_specs
+e2e
+test
+*.md
