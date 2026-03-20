@@ -1,4 +1,4 @@
-const VALID_FONTS = ["playfair", "inter", "roboto", "opensans", "lato"] as const;
+const VALID_FONTS = ["playfair", "inter", "roboto", "opensans", "lato", "merriweather", "montserrat", "nunito", "raleway", "sourcesans", "poppins", "dmsans"] as const;
 type FontOption = (typeof VALID_FONTS)[number];
 
 interface Settings {

@@ -23,6 +23,13 @@ const FONT_FAMILY_MAP: Record<string, string> = {
   roboto: "var(--font-roboto), sans-serif",
   opensans: "var(--font-opensans), sans-serif",
   lato: "var(--font-lato), sans-serif",
+  merriweather: "var(--font-merriweather), serif",
+  montserrat: "var(--font-montserrat), sans-serif",
+  nunito: "var(--font-nunito), sans-serif",
+  raleway: "var(--font-raleway), sans-serif",
+  sourcesans: "var(--font-sourcesans), sans-serif",
+  poppins: "var(--font-poppins), sans-serif",
+  dmsans: "var(--font-dmsans), sans-serif",
 };
 
 const SettingsContext = createContext<SettingsContextValue>({

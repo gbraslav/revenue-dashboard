@@ -26,6 +26,13 @@ const FONT_OPTIONS = [
   { value: "roboto", label: "Roboto" },
   { value: "opensans", label: "Open Sans" },
   { value: "lato", label: "Lato" },
+  { value: "merriweather", label: "Merriweather" },
+  { value: "montserrat", label: "Montserrat" },
+  { value: "nunito", label: "Nunito" },
+  { value: "raleway", label: "Raleway" },
+  { value: "sourcesans", label: "Source Sans 3" },
+  { value: "poppins", label: "Poppins" },
+  { value: "dmsans", label: "DM Sans" },
 ];
 
 const DEFAULTS = {
