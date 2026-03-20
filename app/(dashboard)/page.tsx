@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { ExportPdfButton } from "@/components/export-pdf-button";
 import { RecentActivities } from "@/components/recent-activities";
 import { ProjectCompletion } from "@/components/project-completion";
 import { RevenueDistribution } from "@/components/revenue-distribution";
@@ -16,7 +17,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline">Export PDF</Button>
+          <ExportPdfButton />
           <Button>Generate Report</Button>
         </div>
       </div>
