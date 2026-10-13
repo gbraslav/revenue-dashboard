@@ -42,3 +42,6 @@ next-env.d.ts
 
 playwright-report/*
 test-results/.last-run.json
+
+# local message store (dev only; production uses Vercel Blob)
+/data/messages/
