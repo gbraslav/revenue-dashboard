@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { MessageBody } from "@/components/message-body";
 import { cn } from "@/lib/utils";
 
 interface MessageSummary {
@@ -211,9 +212,7 @@ export default function MessagesPage() {
                     <dd>{formatDate(selected.createdAt)}</dd>
                   </dl>
 
-                  <p className="whitespace-pre-wrap border-t pt-4 text-sm leading-relaxed">
-                    {selected.message}
-                  </p>
+                  <MessageBody text={selected.message} />
 
                   <div className="flex items-center gap-2">
                     {confirmingDelete ? (

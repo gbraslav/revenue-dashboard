@@ -67,6 +67,16 @@ function validate(fields: Record<string, string>) {
   return { errors, name, email, message, get };
 }
 
+/** Plain-text snippet for the list view: drop script/style bodies and tags. */
+function toPreview(message: string): string {
+  return message
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<\/?[a-z][^>]*>/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 140);
+}
+
 export async function POST(request: Request) {
   let fields: Record<string, string> | null;
   try {
@@ -122,7 +132,7 @@ export async function GET() {
     return Response.json({
       messages: messages.map(({ message, ...summary }) => ({
         ...summary,
-        preview: message.slice(0, 140),
+        preview: toPreview(message),
       })),
     });
   } catch (error) {
