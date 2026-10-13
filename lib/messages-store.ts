@@ -1,4 +1,4 @@
-import { list, put } from "@vercel/blob";
+import { del, list, put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -102,4 +102,17 @@ export async function listMessages(): Promise<ContactMessage[]> {
   const ids = (await listIds()).filter(isValidMessageId).sort().reverse();
   const messages = await Promise.all(ids.map(getMessage));
   return messages.filter((m): m is ContactMessage => m !== null);
+}
+
+/** Returns false when the id is malformed; deleting a missing message is a no-op. */
+export async function deleteMessage(id: string): Promise<boolean> {
+  if (!isValidMessageId(id)) return false;
+
+  if (usingBlob()) {
+    await del(`${BLOB_PREFIX}${id}.json`);
+    return true;
+  }
+
+  await fs.rm(path.join(LOCAL_DIR, `${id}.json`), { force: true });
+  return true;
 }

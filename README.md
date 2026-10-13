@@ -58,7 +58,8 @@ curl 'http://localhost:3000/api/messages' \
 Returns `201 {"ok":true,"id":"..."}`, or `422 {"ok":false,"errors":[...]}` on validation failure.
 
 Read back with `GET /api/messages` (summaries, newest first) and
-`GET /api/messages/:id` (full message).
+`GET /api/messages/:id` (full message), and remove one with
+`DELETE /api/messages/:id` (idempotent; unknown ids still return `200`).
 
 ### Storage
 

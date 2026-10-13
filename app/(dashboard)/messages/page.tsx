@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface MessageSummary {
@@ -53,6 +53,9 @@ export default function MessagesPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
 
   useEffect(() => {
     fetch("/api/messages")
@@ -62,7 +65,29 @@ export default function MessagesPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const deleteSelected = async () => {
+    if (!selectedId) return;
+    setDeleting(true);
+    setDeleteError(false);
+    try {
+      const res = await fetch(`/api/messages/${selectedId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error();
+      setMessages((prev) => prev.filter((m) => m.id !== selectedId));
+      setSelectedId(null);
+      setSelected(null);
+      setConfirmingDelete(false);
+    } catch {
+      setDeleteError(true);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const openMessage = (id: string) => {
+    setConfirmingDelete(false);
+    setDeleteError(false);
     setSelectedId(id);
     setSelected(null);
     fetch(`/api/messages/${id}`)
@@ -190,14 +215,44 @@ export default function MessagesPage() {
                     {selected.message}
                   </p>
 
-                  <a
-                    href={`mailto:${selected.email}?subject=Re: ${encodeURIComponent(
-                      selected.subject
-                    )}`}
-                    className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-                  >
-                    ↩ Reply
-                  </a>
+                  <div className="flex items-center gap-2">
+                    {confirmingDelete ? (
+                      <>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={deleteSelected}
+                          disabled={deleting}
+                          data-testid="confirm-delete"
+                        >
+                          {deleting ? "Deleting…" : "Confirm delete"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setConfirmingDelete(false)}
+                          disabled={deleting}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-400 hover:text-red-300"
+                        onClick={() => setConfirmingDelete(true)}
+                        data-testid="delete-message"
+                      >
+                        🗑 Delete
+                      </Button>
+                    )}
+                    {deleteError && (
+                      <span className="text-xs text-red-400">
+                        Could not delete. Try again.
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
             </CardContent>
