@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-const COOKIE_NAME = 'site_access_token'
+import { SITE_ACCESS_COOKIE as COOKIE_NAME } from '@/lib/auth'
 
 async function sha256Hex(value: string): Promise<string> {
   const digest = await crypto.subtle.digest(

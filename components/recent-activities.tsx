@@ -13,19 +13,6 @@ interface Activity {
   status: string;
 }
 
-const statusVariant = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "completed":
-      return "secondary" as const;
-    case "urgent":
-      return "destructive" as const;
-    case "in progress":
-      return "default" as const;
-    default:
-      return "outline" as const;
-  }
-};
-
 const statusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "completed":

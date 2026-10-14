@@ -16,6 +16,12 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
 
+  async function handleLogout() {
+    await fetch("/api/logout", { method: "POST" });
+    // Full reload so the proxy re-evaluates access without the cookie.
+    window.location.assign("/");
+  }
+
   return (
     <aside className="flex h-full w-60 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <div className="px-4 py-6">
@@ -66,6 +72,7 @@ export function Sidebar() {
         </Button>
         <Button
           variant="ghost"
+          onClick={handleLogout}
           className="w-full justify-start gap-3 px-3 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
         >
           <span>🚪</span> Logout

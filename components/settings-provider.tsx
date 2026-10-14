@@ -53,8 +53,16 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    let cancelled = false;
+    fetch("/api/settings").then(async (res) => {
+      if (res.ok && !cancelled) {
+        setSettings(await res.json());
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <SettingsContext.Provider value={{ settings, refetch }}>

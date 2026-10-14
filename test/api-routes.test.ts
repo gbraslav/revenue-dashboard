@@ -1,4 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+const cookieStore = { delete: vi.fn() };
+vi.mock("next/headers", () => ({
+  cookies: async () => cookieStore,
+}));
 
 async function callRoute(mod: { GET: () => Promise<Response> }) {
   const res = await mod.GET();
@@ -48,5 +53,12 @@ describe("API Routes", () => {
     expect(data.months.length).toBeGreaterThan(0);
     expect(data.months[0]).toHaveProperty("name");
     expect(data.months[0]).toHaveProperty("value");
+  });
+
+  it("POST /api/logout deletes the access cookie", async () => {
+    const mod = await import("../app/api/logout/route");
+    const res = await mod.POST();
+    expect(res.status).toBe(200);
+    expect(cookieStore.delete).toHaveBeenCalledWith("site_access_token");
   });
 });

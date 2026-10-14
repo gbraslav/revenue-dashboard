@@ -11,7 +11,7 @@ const DEFAULTS: Settings = {
   backgroundColor: "#0b1120",
 };
 
-let currentSettings: Settings = { ...DEFAULTS };
+const currentSettings: Settings = { ...DEFAULTS };
 
 function isValidHexColor(color: string): boolean {
   return /^#[0-9a-fA-F]{6}$/.test(color);

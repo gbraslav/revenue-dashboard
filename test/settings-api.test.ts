@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 
 // Re-import fresh module for each test to reset in-memory state
 async function freshModule() {
