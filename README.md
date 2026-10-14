@@ -1,39 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Revenue Dashboard
+
+An executive revenue dashboard built with [Next.js](https://nextjs.org) (App Router),
+React, Tailwind CSS, and Recharts. Pages include the main dashboard, activities,
+settings, and a contact-message inbox at `/messages`. Each chart/section is driven
+by a dedicated API route under `app/api/` that currently returns static data —
+response shapes are stable so a real database can be added later without frontend
+changes.
+
+Feature specs live in `_specs/`.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/?token=&lt;your-token&gt;](http://localhost:3000/?token=%3Cyour-token%3E)
+with the value of `SITE_ACCESS_TOKEN` from `.env.local` — the site is
+token-protected and shows "Permission denied" without it
+(see [Access protection](#access-protection) below).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other commands:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build        # Production build
+npm start            # Start production server
+npm run lint         # ESLint
+npx vitest run       # Unit tests (./test)
+npx playwright test  # E2E tests (./e2e)
+```
 
-## Learn More
+## Access protection
 
-To learn more about Next.js, take a look at the following resources:
+The entire site (all pages and API routes) is gated by a shared access token,
+enforced in `proxy.ts`. Requests without a valid token get `403 Permission denied`
+— an HTML page for page requests, JSON for `/api/*`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Set `SITE_ACCESS_TOKEN` in `.env.local` (gitignored):
 
-## Deploy on Vercel
+```bash
+echo "SITE_ACCESS_TOKEN=$(openssl rand -hex 32)" >> .env.local
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The same variable is configured on Vercel (Production and Preview) as a sensitive
+env var:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+printf '%s' "<token>" | vercel env add SITE_ACCESS_TOKEN production
+printf '%s' "<token>" | vercel env add SITE_ACCESS_TOKEN preview
+```
+
+### How it works
+
+- Visit any page once with `?token=<value>`. If it matches, the proxy sets an
+  httpOnly `site_access_token` cookie (30 days) and redirects to the clean URL.
+- Subsequent requests are allowed by the cookie; everyone else gets `403`.
+- Tokens are compared via SHA-256 digests rather than raw strings to avoid
+  leaking the token through response-timing differences.
+- Fail-closed: if `SITE_ACCESS_TOKEN` is unset, every request is denied.
+- Static assets (`_next/static`, `_next/image`, `favicon.ico`) are not gated.
+
+Quick login from the project root:
+
+```bash
+open "http://localhost:3000/?token=$(grep '^SITE_ACCESS_TOKEN=' .env.local | cut -d= -f2)"
+```
+
+Env vars apply only to new deployments — after changing the token on Vercel,
+redeploy for it to take effect.
 
 ## Contact messages
 
@@ -48,6 +85,7 @@ or JSON. Fields: `name`, `email`, `message` (required), `reason`, `_subject`, an
 ```bash
 curl 'http://localhost:3000/api/messages' \
   -H 'Accept: application/json' \
+  -H 'Cookie: site_access_token=<token>' \
   --form-string 'name=Gabby' \
   --form-string 'email=gabby@arnica.io' \
   --form-string 'reason=general' \
@@ -77,3 +115,15 @@ vercel env pull .env.local
 ```
 
 Set `BLOB_ACCESS=public` if the store was created public; it defaults to `private`.
+
+## Deploy on Vercel
+
+The project is linked to the `revenue-dashboard` project on Vercel. Deploy with:
+
+```bash
+vercel          # preview deployment
+vercel --prod   # production
+```
+
+Remember that `SITE_ACCESS_TOKEN` (and the Blob env vars, if used) must be set
+in the target environment or the site will deny all requests.
